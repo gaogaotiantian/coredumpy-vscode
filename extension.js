@@ -138,6 +138,7 @@ function activate(context) {
 
             await serverStartPromise;
             vscode.debug.startDebugging(undefined, debugConfig);
+            vscode.commands.executeCommand('workbench.view.debug');
         } else {
             vscode.window.showErrorMessage('Failed to get the file.');
         }
