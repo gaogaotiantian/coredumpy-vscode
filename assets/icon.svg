@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background -->
+  <rect width="128" height="128" fill="white" />
+  
+  <!-- Core dump circle with a crack -->
+  <circle cx="64" cy="64" r="20" fill="#333" />
+  <polyline points="64,44 60,54 68,64 60,74 64,84" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Blue snake arc (one semicircle) -->
+  <path d="M30,64 A34,34 0 0,1 98,64" stroke="#306998" stroke-width="10" fill="none" stroke-linecap="round" />
+  
+  <!-- Yellow snake arc (complementary semicircle) -->
+  <path d="M30,64 A34,34 0 0,0 98,64" stroke="#FFD43B" stroke-width="10" fill="none" stroke-linecap="round" />
+  
+  <!-- Blue snake head at right endpoint -->
+  <circle cx="98" cy="64" r="5" fill="#306998" />
+  <!-- Blue head eyes -->
+  <circle cx="102" cy="60" r="1" fill="white" />
+  <circle cx="102" cy="68" r="1" fill="white" />
+  
+  <!-- Yellow snake head at left endpoint -->
+  <circle cx="30" cy="64" r="5" fill="#FFD43B" />
+  <!-- Yellow head eyes -->
+  <circle cx="26" cy="60" r="1" fill="white" />
+  <circle cx="26" cy="68" r="1" fill="white" />
+</svg>
