@@ -1,0 +1,89 @@
+{
+  "name": "coredumpy",
+  "displayName": "coredumpy",
+  "description": "coredumpy vscode extension",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onDebug"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "coredumpy.loadFile",
+        "title": "Load with coredumpy"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "coredumpy.loadFile",
+          "group": "debug"
+        }
+      ]
+    },
+    "debuggers": [
+      {
+        "type": "coredumpy",
+        "label": "curedumpy load",
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to a python file.",
+                "default": "${file}"
+              },
+              "args": {
+                "type": "array",
+                "description": "Command line arguments passed to the program",
+                "default": [],
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "coredumpy",
+            "request": "launch",
+            "name": "load with coredumpy",
+            "program": "${file}",
+            "args": []
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "extensionDependencies": [
+    "ms-python.python"
+  ],
+  "dependencies": {
+    "@vscode/python-extension": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8"
+  }
+}
