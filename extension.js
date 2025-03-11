@@ -7,7 +7,7 @@ const { PythonExtension } = require('@vscode/python-extension');
 
 function getCoredumpyVersion(pythonPath) {
     return new Promise((resolve) => {
-        const process = spawn(pythonPath, ['-m', 'pip', 'show', 'coredumpy']);
+        const process = spawn(pythonPath, ['-c', 'import coredumpy;print(coredumpy.__version__)']);
         let stdout = "";
         // wait until the process is finished
         process.stdout.on('data', (data) => {
@@ -15,8 +15,11 @@ function getCoredumpyVersion(pythonPath) {
         });
 
         process.on('close', () => {
+            if (process.exitCode !== 0){
+                resolve(null);
+            }
             // Get the stdout
-            const regex = /Version: (\d+\.\d+\.\d+)/g;
+            const regex = /(\d+\.\d+\.\d+)/g;
             // Check if the stdout contains the version
             let m = regex.exec(stdout);
 
