@@ -65,7 +65,6 @@ const uriHandler = {
                     debugFile(filePath);
                 }
             });
-            vscode.window.showInformationMessage(`Extracted to ${extractPath}`);
         } else {
             vscode.window.showErrorMessage(`Unsupported URI path: ${parsedUri.path}`);
             return;
