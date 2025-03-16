@@ -89,8 +89,7 @@
   "dependencies": {
     "@octokit/rest": "^21.1.1",
     "@vscode/python-extension": "^1.0.5",
-    "adm-zip": "^0.5.16",
-    "octokit": "^4.1.2"
+    "adm-zip": "^0.5.16"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
