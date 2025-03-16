@@ -19,7 +19,8 @@
     "devtools"
   ],
   "activationEvents": [
-    "onDebug"
+    "onDebug",
+    "onUri"
   ],
   "license": "Apache-2.0",
   "icon": "assets/icon.png",
@@ -86,15 +87,18 @@
     "ms-python.python"
   ],
   "dependencies": {
-    "@vscode/python-extension": "^1.0.5"
+    "@octokit/rest": "^21.1.1",
+    "@vscode/python-extension": "^1.0.5",
+    "adm-zip": "^0.5.16",
+    "octokit": "^4.1.2"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
-    "eslint": "^8.54.0",
-    "typescript": "^5.3.2",
+    "@types/vscode": "^1.74.0",
     "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8"
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
   }
 }

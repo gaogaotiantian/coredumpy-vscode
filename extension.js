@@ -4,6 +4,9 @@
 const vscode = require('vscode');
 const { spawn } = require('child_process');
 const { PythonExtension } = require('@vscode/python-extension');
+const { uriHandler } = require('./uriHandler.js');
+const { globalState } = require('./globalState');
+const { debugFile } = require('./debugFile');
 
 function getCoredumpyVersion(pythonPath) {
     return new Promise((resolve) => {
@@ -95,7 +98,6 @@ function confirmCoredumpyVersion(target) {
     });
 }
 
-
 function startDebugAdapterServer() {
     return confirmCoredumpyVersion("0.3.0").then((pythonPath) => {
         debugAdapterProcess = spawn(pythonPath, ['-m', 'coredumpy', 'host']);
@@ -114,12 +116,11 @@ function startDebugAdapterServer() {
     })
 }
 
-var serverStartPromise = null;
 var debugAdapterProcess = null;
 
 
-function activate(context) {
-    serverStartPromise = startDebugAdapterServer();
+async function activate(context) {
+    globalState.serverStartPromise = startDebugAdapterServer();
 
     const factory = new CoreDumPyDebugAdapterDescriptorFactory();
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('coredumpy', factory));
@@ -130,22 +131,14 @@ function activate(context) {
         }
 
         if (fileUri) {
-            const filePath = fileUri.fsPath;
-            const debugConfig = {
-                type: 'coredumpy',
-                name: 'load coredumpy file',
-                request: 'launch',
-                program: filePath,
-                args: []
-            };
-
-            await serverStartPromise;
-            vscode.debug.startDebugging(undefined, debugConfig);
-            vscode.commands.executeCommand('workbench.view.debug');
+            await debugFile(fileUri.fsPath);
         } else {
             vscode.window.showErrorMessage('Failed to get the file.');
         }
     });
+
+    // Register the URI handler with VS Code.
+    context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
     context.subscriptions.push(debugFileCommand);
 }
@@ -153,7 +146,7 @@ exports.activate = activate;
 
 class CoreDumPyDebugAdapterDescriptorFactory {
     async createDebugAdapterDescriptor(session) {
-        await serverStartPromise;
+        await globalState.serverStartPromise;
         return new vscode.DebugAdapterServer(6742, 'localhost');
     }
 }
@@ -163,5 +156,7 @@ function deactivate() {
         debugAdapterProcess.kill();
         debugAdapterProcess = null;
     }
+
+    globalState.deleteTempDir();
 }
 exports.deactivate = deactivate;
