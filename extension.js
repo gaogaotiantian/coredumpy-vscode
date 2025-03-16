@@ -99,7 +99,7 @@ function confirmCoredumpyVersion(target) {
 }
 
 function startDebugAdapterServer() {
-    return confirmCoredumpyVersion("0.3.0").then((pythonPath) => {
+    return confirmCoredumpyVersion("0.4.0").then((pythonPath) => {
         debugAdapterProcess = spawn(pythonPath, ['-m', 'coredumpy', 'host']);
 
         debugAdapterProcess.stdout.on('data', (data) => {
