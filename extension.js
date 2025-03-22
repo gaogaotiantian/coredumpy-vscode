@@ -113,6 +113,14 @@ function startDebugAdapterServer() {
         debugAdapterProcess.on('close', (code) => {
             console.log(`Debugger exits with code ${code}`);
         });
+
+        return new Promise((resolve) => {
+            debugAdapterProcess.stdout.on('data', (data) => {
+                if (data.toString().includes("Server socket created")) {
+                    resolve();
+                }
+            });
+        })
     })
 }
 
