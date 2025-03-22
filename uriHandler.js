@@ -52,15 +52,17 @@ const uriHandler = {
         const parsedUri = vscode.Uri.parse(uri);
         if (parsedUri.path === '/load-github-artifact') {
             const params = new URLSearchParams(parsedUri.query);
-            const tempdir = globalState.getTempDir();
-            const downloadPath = path.join(tempdir, params.get('artifactId') + '.zip');
-            await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Notification,
-                title: 'Downloading artifact',
-                cancellable: false
-            }, async (progress, token) => {
-                await downloadArtifact(params.get('owner'), params.get('repo'), params.get('artifactId'), downloadPath);
-            });
+            const artifactDir = globalState.getArtifactDir();
+            const downloadPath = path.join(artifactDir, params.get('artifactId') + '.zip');
+            if (!fs.existsSync(downloadPath)) {
+                await vscode.window.withProgress({
+                    location: vscode.ProgressLocation.Notification,
+                    title: 'Downloading artifact',
+                    cancellable: false
+                }, async (progress, token) => {
+                    await downloadArtifact(params.get('owner'), params.get('repo'), params.get('artifactId'), downloadPath);
+                });
+            }
             const zip = new AdmZip(downloadPath);
             const extractPath = globalState.getTempDir();
             zip.extractAllToAsync(extractPath, true, false, () => {

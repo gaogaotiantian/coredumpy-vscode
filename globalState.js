@@ -11,6 +11,7 @@ class GlobalState {
         this.tempdir = null;
         this.serverStartPromise = null;
         this.octokit = null;
+        this.artifactDir = null;
     }
 
     createTempDir() {
@@ -22,6 +23,15 @@ class GlobalState {
     getTempDir() {
         this.createTempDir();
         return fs.mkdtempSync(path.join(this.tempdir, "tmp-"));
+    }
+
+    getArtifactDir() {
+        this.createTempDir();
+        if (this.artifactDir === null) {
+            this.artifactDir = path.join(this.tempdir, 'artifacts');
+            fs.mkdirSync(this.artifactDir, { recursive: true });
+        }
+        return this.artifactDir;
     }
 
     deleteTempDir() {
