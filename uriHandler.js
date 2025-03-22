@@ -54,16 +54,24 @@ const uriHandler = {
             const params = new URLSearchParams(parsedUri.query);
             const tempdir = globalState.getTempDir();
             const downloadPath = path.join(tempdir, params.get('artifactId') + '.zip');
-            await downloadArtifact(params.get('owner'), params.get('repo'), params.get('artifactId'), downloadPath);
+            await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: 'Downloading artifact',
+                cancellable: false
+            }, async (progress, token) => {
+                await downloadArtifact(params.get('owner'), params.get('repo'), params.get('artifactId'), downloadPath);
+            });
             const zip = new AdmZip(downloadPath);
             const extractPath = globalState.getTempDir();
-            zip.extractAllTo(extractPath, true);
-            const files = fs.readdirSync(extractPath);
-            files.forEach((file) => {
-                const filePath = path.join(extractPath, file);
-                if (fs.statSync(filePath).isFile()) {
-                    debugFile(filePath);
-                }
+            zip.extractAllToAsync(extractPath, true, false, () => {
+                fs.readdir(extractPath, (err, files) => {
+                    files.forEach((file) => {
+                        const filePath = path.join(extractPath, file);
+                        if (fs.statSync(filePath).isFile()) {
+                            debugFile(filePath);
+                        }
+                    });
+                });
             });
         } else {
             vscode.window.showErrorMessage(`Unsupported URI path: ${parsedUri.path}`);
